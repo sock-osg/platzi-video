@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+
 import VideoPlayerLayout from '../components/video-player-layout';
 import Video from '../components/video';
 import Title from '../components/title';
@@ -74,7 +76,7 @@ class VideoPlayer extends Component {
         setRef={this.setRef}
       >
         <Title
-          title={this.props.title}
+          title={this.props.media.get('title')}
         />
         <Controls>
           <PlayPause
@@ -107,11 +109,17 @@ class VideoPlayer extends Component {
           handleTimeUpdate={this.handleTimeUpdate}
           handleSeeking={this.handleSeeking}
           handleSeeked={this.handleSeeked}
-          src={this.props.src}
+          src={this.props.media.get('src')}
         />
       </VideoPlayerLayout>
     )
   }
 }
 
-export default VideoPlayer;
+function mapStateToProps(state, props) {
+  return {
+    media: state.getIn(['data', 'entities', 'media', props.id])
+  }
+}
+
+export default connect(mapStateToProps)(VideoPlayer);

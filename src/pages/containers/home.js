@@ -14,17 +14,22 @@ class Home extends Component {
   state = {
     modalVisible: false,
   }
-  handleOpenModal = (media) => {
-    this.setState({
-      modalVisible: true,
-      media
+
+  handleOpenModal = (mediaId) => {
+    this.props.dispatch({
+      type: 'OPEN_MODAL',
+      payload: {
+        mediaId
+      }
     })
   }
+
   handleCloseModal = (event) => {
-    this.setState({
-      modalVisible: false,
+    this.props.dispatch({
+      type: 'CLOSE_MODAL'
     })
   }
+
   render() {
     return (
       <HandleError>
@@ -36,15 +41,16 @@ class Home extends Component {
             results={this.props.results}
           />
           {
-            this.state.modalVisible &&
+            this.props.modal.get('visibility') &&
             <ModalContainer>
               <Modal
                 handleClick={this.handleCloseModal}
               >
                 <VideoPlayer
                   autoplay
-                  src={this.state.media.src}
-                  title={this.state.media.title}
+                  id={this.props.modal.get('mediaId')}
+                  // src={this.state.media.src}
+                  // title={this.state.media.title}
                 />
               </Modal>
             </ModalContainer>
@@ -72,7 +78,8 @@ function mapStateToProps(state, props) {
 
   return {
     categories: categories,
-    results: immResults
+    results: immResults,
+    modal: state.get('modal'),
   }
 }
 
