@@ -7,6 +7,9 @@ import Modal from '../../widgets/components/modal';
 import HandleError from '../../error/containers/handle-error';
 import VideoPlayer from '../../player/containers/video-player';
 
+import { connect } from 'react-redux'
+import { List as list } from 'immutable'
+
 class Home extends Component {
   state = {
     modalVisible: false,
@@ -28,8 +31,9 @@ class Home extends Component {
         <HomeLayout>
           <Related />
           <Categories
-            categories={this.props.data.categories}
+            categories={this.props.categories}
             handleOpenModal={this.handleOpenModal}
+            results={this.props.results}
           />
           {
             this.state.modalVisible &&
@@ -51,4 +55,25 @@ class Home extends Component {
   }
 }
 
-export default Home
+function mapStateToProps(state, props) {
+  const categories = state.getIn(['data', 'categories']).map((categoryId) => {
+    return state.getIn(['data', 'entities', 'categories', categoryId])
+  })
+
+  let immResults = list()
+  const query = state.getIn(['data', 'query'])
+
+  if (query) {
+    const immMedia = state.getIn(['data', 'entities', 'media'])
+    immResults = immMedia.filter((immItem) => {
+      return immItem.get('author').toLowerCase().includes(query.toLowerCase())
+    }).toList()
+  }
+
+  return {
+    categories: categories,
+    results: immResults
+  }
+}
+
+export default connect(mapStateToProps)(Home)
