@@ -1,5 +1,7 @@
 import { fromJS } from 'immutable'
 
+import * as actionTypes from './../constants/actionTypes'
+
 const initialState = fromJS({
 	visibility: false,
 	mediaId: null,
@@ -8,13 +10,13 @@ const initialState = fromJS({
 //function modal(state = { visibility: false, mediaId: null }, action) {
 function modal(state = initialState, action) {
 	switch(action.type) {
-		case 'OPEN_MODAL': {
+		case actionTypes.OPEN_MODAL: {
       return state.merge({
 				visibility: true,
 				mediaId: action.payload.mediaId,
 			})
 		}
-    case 'CLOSE_MODAL': {
+    case actionTypes.CLOSE_MODAL: {
       return state.set('visibility', false)
     }
 		default:

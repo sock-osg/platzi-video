@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { List as list } from 'immutable'
+
 import HomeLayout from '../components/home-layout';
 import Categories from '../../categories/components/categories';
 import Related from '../components/related';
@@ -7,8 +11,8 @@ import Modal from '../../widgets/components/modal';
 import HandleError from '../../error/containers/handle-error';
 import VideoPlayer from '../../player/containers/video-player';
 
-import { connect } from 'react-redux'
-import { List as list } from 'immutable'
+// import { openModal, closeModal } from './../../actions'
+import * as actions from './../../actions'
 
 class Home extends Component {
   state = {
@@ -16,18 +20,11 @@ class Home extends Component {
   }
 
   handleOpenModal = (mediaId) => {
-    this.props.dispatch({
-      type: 'OPEN_MODAL',
-      payload: {
-        mediaId
-      }
-    })
+    this.props.actions.openModal(mediaId)
   }
 
   handleCloseModal = (event) => {
-    this.props.dispatch({
-      type: 'CLOSE_MODAL'
-    })
+    this.props.actions.closeModal()
   }
 
   render() {
@@ -39,6 +36,7 @@ class Home extends Component {
             categories={this.props.categories}
             handleOpenModal={this.handleOpenModal}
             results={this.props.results}
+            isLoading={this.props.isLoading}
           />
           {
             this.props.modal.get('visibility') &&
@@ -80,7 +78,14 @@ function mapStateToProps(state, props) {
     categories: categories,
     results: immResults,
     modal: state.get('modal'),
+    isLoading: state.getIn(['isLoading', 'active'])
   }
 }
 
-export default connect(mapStateToProps)(Home)
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
