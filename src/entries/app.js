@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { render } from 'react-dom';
-import Home from '../pages/containers/home';
+import { BrowserRouter, Route } from 'react-router-dom'
+
+import Videos from '../pages/containers/videos';
+import Header from '../pages/components/header'
+import Home from '../pages/components/home'
 // import Playlist from './src/playlist/components/playlist';
 //import data from '../api.json';
 // console.log('Hola mundo!' )
@@ -74,8 +78,14 @@ const homeContainer = document.getElementById('home-container')
 // const holaMundo = <h1>hola Estudiante!</h1>;
 // hydrate( <Home data={data} />, homeContainer);
 render(
-	<Provider store={store}>
-		<Home />
-	</Provider>,
+	<BrowserRouter>
+		<Provider store={store}>
+			<Fragment>
+				<Header />
+				<Route exact path="/" component={Home} />
+				<Route exact strict path="/videos" component={Videos} />
+			</Fragment>
+		</Provider>
+	</BrowserRouter>,
 	homeContainer
 )

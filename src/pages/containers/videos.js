@@ -12,7 +12,7 @@ import HandleError from '../../error/containers/handle-error';
 import VideoPlayer from '../../player/containers/video-player';
 
 // import { openModal, closeModal } from './../../actions'
-import * as actions from './../../actions'
+import * as actions from '../../actions'
 
 class Home extends Component {
   state = {
